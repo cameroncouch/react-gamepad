@@ -3,3 +3,16 @@ APP
     Buttons Component
     Connected Component
     Button Presses Component
+
+Populate a container with a controller for each connected
+
+How do I want to handle multiple controllers being plugged in?
+
+Require Button Press, something like "If you have a controller connected press a button"
+
+- Break into separate files
+- Lift state up into parent
+- Turn components into functional components where possible
+- PWA
+- Cool CSS animations
+- MaterialUI
