@@ -1,24 +1,6 @@
 import React from "react";
 import './App.css'
 
-class ButtonPresses extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      //some state
-    }
-  }
-  render() {
-    return (
-      <div className="button-presses">
-        <p>Inputs</p>
-        <p>{this.props.someProp}</p>
-        <div className="press-box"></div>
-      </div>
-    )
-  }
-}
-
 class Buttons extends React.Component {
   constructor(props) {
     super(props);
@@ -27,27 +9,14 @@ class Buttons extends React.Component {
     }
   }
 
-  //function to check for button pressed
-  styleButton() {
-    console.log('Button Pressed');
-  }
-
-  checkButtonPresses() {
-    //functionality to check if a button has been pressed, should be on requestAnimationFrame
-  }
-  
-  componentDidMount() {
-    //initial call to checkButtonPresses
-    this.checkButtonPresses();
-  }
-  
   buildButtons(buttons) {
-    return buttons.map(
+    return buttons[0].map(
       (button, idx) => {
         return (
-          <p 
+          <p
             key={idx}
             value={button.value}
+            className={button.className}
           >
             {"BUTTON" + idx + button.pressed}
           </p>
@@ -57,12 +26,13 @@ class Buttons extends React.Component {
   }
 
   render() {
-    const gamePads = this.props.connectedPads ? prepGamepads(this.props.connectedPads) : null;
+    const gamePads = this.props.connectedPads.length > 0 ? this.props.connectedPads : null,
+          buttons = this.props.buttons.length > 0 ? this.props.buttons : null;
     return (
       <div className="buttons">
         <p>Buttons</p>
         {
-          gamePads ? this.buildButtons(gamePads[0]["buttons"]) : null
+          gamePads ? this.buildButtons(buttons) : null
         }
         <p>{this.props.someProp}</p>
       </div>
@@ -95,7 +65,7 @@ class Connected extends React.Component {
 
   render() {
     const connectionStatus = this.props.connectionStatus,
-      gamePads = prepGamepads(this.props.connectedPads);
+          gamePads = this.props.connectedPads ? this.props.connectedPads : null;
 
     return (
       <div className="connection">
@@ -124,7 +94,9 @@ class Controller extends React.Component {
     super(props);
     this.state = {
       connectionStatus: "Gamepad not detected",
-      connectedPads: undefined
+      connectedPads: [],
+      buttons: [],
+      pressed: false
     }
     this.handleGamepadConnection = this.handleGamepadConnection.bind(this);
   }
@@ -133,8 +105,8 @@ class Controller extends React.Component {
     if (e.type === "gamepadconnected") {
       this.setState({
         connectionStatus: "Gamepad Connected",
-        connectedPads: navigator.getGamepads()
       });
+      this.prepGamepads();
     } else {
       this.setState({
         connectionStatus: "Gamepad Disconnected",
@@ -143,9 +115,46 @@ class Controller extends React.Component {
     }
   }
 
+  prepGamepads() {
+    const pads = navigator.getGamepads(),
+          arr1 = [],
+          arr2 = [];
+    for (let pad in pads) {
+      if (pads[pad] && typeof pads[pad] === 'object') {
+        arr1.push(pads[pad]);
+        arr2.push(pads[pad]["buttons"])
+      }
+    }
+    this.setState({
+      connectedPads: arr1,
+      buttons: arr2
+    })
+  }
+
+  handleButtonPress() {
+    requestAnimationFrame(() => {
+      for(let button in this.state.buttons[0]) {
+        if(typeof this.state.buttons[0][button] === 'object') {
+          if(this.state.buttons[0][button].pressed) {
+            this.setState({pressed: !this.state.pressed})
+            this.state.buttons[0][button].className = "pressed"
+          } else {
+            this.setState({pressed: !this.state.pressed})
+            this.state.buttons[0][button].className = "not-pressed"
+          }
+        }
+      }
+    })
+  }
+
+  componentDidMount() {
+    setInterval(() => this.handleButtonPress(), 5000);
+  }
+
   render() {
-    const connectedPads = this.state.connectedPads,
-      connectionStatus = this.state.connectionStatus;
+    const connectedPads = this.state.connectedPads ? this.state.connectedPads : null,
+          connectionStatus = this.state.connectionStatus,
+          buttons = this.state.buttons ? this.state.buttons : null;
 
     return (
       <div className="controller">
@@ -159,10 +168,7 @@ class Controller extends React.Component {
         <Buttons
           someProp={"Test prop from controller(parent)"}
           connectedPads={connectedPads}
-        />
-        <ButtonPresses
-          someProp={"Test prop from controller(parent)"}
-          connectedPads={connectedPads}
+          buttons={buttons}
         />
       </div>
     );
@@ -177,16 +183,6 @@ function App() {
       </header>
     </div>
   );
-}
-
-function prepGamepads(pads) {
-  let arr = [];
-  for (let pad in pads) {
-    if (pads[pad] && typeof pads[pad] === 'object') {
-      arr.push(pads[pad]);
-    }
-  }
-  return arr;
 }
 
 export default App;
