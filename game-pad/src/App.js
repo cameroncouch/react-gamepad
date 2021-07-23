@@ -95,10 +95,10 @@ class Controller extends React.Component {
     this.state = {
       connectionStatus: "Gamepad not detected",
       connectedPads: [],
-      buttons: [],
-      pressed: false
+      buttons: []
     }
     this.handleGamepadConnection = this.handleGamepadConnection.bind(this);
+    this.handleButtonPress = this.handleButtonPress.bind(this);
   }
 
   handleGamepadConnection(e) {
@@ -132,30 +132,30 @@ class Controller extends React.Component {
   }
 
   handleButtonPress() {
+    this.prepGamepads();
+    const updatedButtons = this.state.buttons ? [...this.state.buttons] : undefined;
     requestAnimationFrame(() => {
-      for(let button in this.state.buttons[0]) {
-        if(typeof this.state.buttons[0][button] === 'object') {
-          if(this.state.buttons[0][button].pressed) {
-            this.setState({pressed: !this.state.pressed})
-            this.state.buttons[0][button].className = "pressed"
+      if(!updatedButtons) { return; }
+      for(let button in updatedButtons[0]) {
+          if(updatedButtons[0][button].pressed) {
+            updatedButtons[0][button].className = "pressed"
           } else {
-            this.setState({pressed: !this.state.pressed})
-            this.state.buttons[0][button].className = "not-pressed"
+            updatedButtons[0][button].className = "not-pressed"
           }
-        }
       }
     })
+    this.setState({buttons: updatedButtons});
   }
 
   componentDidMount() {
-    setInterval(() => this.handleButtonPress(), 5000);
+    setInterval(() => this.handleButtonPress(), 100);
   }
 
   render() {
     const connectedPads = this.state.connectedPads ? this.state.connectedPads : null,
           connectionStatus = this.state.connectionStatus,
           buttons = this.state.buttons ? this.state.buttons : null;
-
+    // console.log(buttons);
     return (
       <div className="controller">
         <p>Controller</p>
