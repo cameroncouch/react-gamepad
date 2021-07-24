@@ -9,73 +9,19 @@ class Buttons extends React.Component {
     }
   }
 
-  buildButtons(buttons) {
+  buildButtons(start, stop, buttons) {
     return buttons[0].map(
       (button, idx) => {
-        if(idx <= 3) {
+        if (idx >= start && idx <= stop) {
           return (
-            <ol id={"face-buttons"}>
-              <li
-                key={idx}
-                value={button.value}
-                id={`button-${idx}`}
-                className={button.className}
-              >
-                {"BUTTON" + idx + button.pressed}
-              </li>
-            </ol>
-          )
-        } else if (idx <= 7){
-          return (
-            <ol id={"shoulder-buttons"}>
-              <li
-                key={idx}
-                value={button.value}
-                id={`button-${idx}`}
-                className={button.className}
-              >
-                {"BUTTON" + idx + button.pressed}
-              </li>
-            </ol>
-          )
-        } else if(idx <= 9) {
-          return (
-            <ol id={"start-select"}>
-              <li
-                key={idx}
-                value={button.value}
-                id={`button-${idx}`}
-                className={button.className}
-              >
-                {"BUTTON" + idx + button.pressed}
-              </li>
-            </ol>
-          )
-        } else if(idx <= 11) {
-          return (
-            <ol id={"l3-r3"}>
-              <li
-                key={idx}
-                value={button.value}
-                id={`button-${idx}`}
-                className={button.className}
-              >
-                {"BUTTON" + idx + button.pressed}
-              </li>
-            </ol>
-          )
-        } else if (idx <= 16){
-          return (
-            <ol id={"dpad"}>
-              <li
-                key={idx}
-                value={button.value}
-                id={`button-${idx}`}
-                className={button.className}
-              >
-                {"BUTTON" + idx + button.pressed}
-              </li>
-            </ol>
+            <li
+              key={idx}
+              value={button.value}
+              id={`button-${idx}`}
+              className={button.className}
+            >
+              {"BUTTON" + idx + button.pressed}
+            </li>
           )
         }
         return null;
@@ -85,13 +31,65 @@ class Buttons extends React.Component {
 
   render() {
     const gamePads = this.props.connectedPads.length > 0 ? this.props.connectedPads : null,
-          buttons = this.props.buttons.length > 0 ? this.props.buttons : null;
+      buttons = this.props.buttons.length > 0 ? this.props.buttons : null;
     return (
       <div className="buttons">
-        <p>Buttons</p>
-        {
-          gamePads ? this.buildButtons(buttons) : null
-        }
+        <div className="top">
+          <ol className="bumpers">
+            {
+              gamePads ? this.buildButtons(4, 5, buttons) : null
+            }
+          </ol>
+          <ol className="triggers">
+            {
+              gamePads ? this.buildButtons(6, 7, buttons) : null
+            }
+          </ol>
+        </div>
+        <div className="middle">
+          <ol className="dpad">
+            {
+              gamePads ? this.buildButtons(12, 15, buttons) : null
+            }
+          </ol>
+          <ol className="select">
+            {
+              gamePads ? this.buildButtons(8, 8, buttons) : null
+            }
+          </ol>
+          <ol className="touchpad">
+            {
+              gamePads ? this.buildButtons(17, 17, buttons) : null
+            }
+          </ol>
+          <ol className="start">
+            {
+              gamePads ? this.buildButtons(9, 9, buttons) : null
+            }
+          </ol>
+          <ol className="face">
+            {
+              gamePads ? this.buildButtons(0, 3, buttons) : null
+            }
+          </ol>
+        </div>
+        <div className="bottom">
+          <ol className="l3">
+            {
+              gamePads ? this.buildButtons(10, 10, buttons) : null
+            }
+          </ol>
+          <ol className="home">
+            {
+              gamePads ? this.buildButtons(16, 16, buttons) : null
+            }
+          </ol>
+          <ol className="r3">
+            {
+              gamePads ? this.buildButtons(11, 11, buttons) : null
+            }
+          </ol>
+        </div>
       </div>
     )
   }
@@ -100,6 +98,7 @@ class Buttons extends React.Component {
 function IndicateControllerConnection() {
   return (
     <div className="connected">
+      <p>Connected:</p>
       <span>🕹️</span>
     </div>
   )
@@ -122,7 +121,7 @@ class Connected extends React.Component {
 
   render() {
     const connectionStatus = this.props.connectionStatus,
-          gamePads = this.props.connectedPads ? this.props.connectedPads : null;
+      gamePads = this.props.connectedPads ? this.props.connectedPads : null;
 
     return (
       <div className="connection">
@@ -173,8 +172,8 @@ class Controller extends React.Component {
 
   prepGamepads() {
     const pads = navigator.getGamepads(),
-          arr1 = [],
-          arr2 = [];
+      arr1 = [],
+      arr2 = [];
     for (let pad in pads) {
       if (pads[pad] && typeof pads[pad] === 'object') {
         arr1.push(pads[pad]);
@@ -190,15 +189,15 @@ class Controller extends React.Component {
   handleButtonPress() {
     this.prepGamepads();
     const updatedButtons = this.state.buttons ? [...this.state.buttons] : undefined;
-    if(!updatedButtons) { return; }
-    for(let button in updatedButtons[0]) {
-        if(updatedButtons[0][button].pressed) {
-          updatedButtons[0][button].className = "pressed"
-        } else {
-          updatedButtons[0][button].className = "not-pressed"
-        }
+    if (!updatedButtons) { return; }
+    for (let button in updatedButtons[0]) {
+      if (updatedButtons[0][button].pressed) {
+        updatedButtons[0][button].className = "pressed"
+      } else {
+        updatedButtons[0][button].className = updatedButtons[0][button].className ? "not-pressed" : null
+      }
     }
-    this.setState({buttons: updatedButtons});
+    this.setState({ buttons: updatedButtons });
     requestAnimationFrame(this.handleButtonPress);
   }
 
@@ -208,8 +207,8 @@ class Controller extends React.Component {
 
   render() {
     const connectedPads = this.state.connectedPads ? this.state.connectedPads : null,
-          connectionStatus = this.state.connectionStatus,
-          buttons = this.state.buttons ? this.state.buttons : null;
+      connectionStatus = this.state.connectionStatus,
+      buttons = this.state.buttons ? this.state.buttons : null;
     return (
       <div className="controller">
         <p>Controller</p>
