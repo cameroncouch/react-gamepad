@@ -7,3 +7,8 @@
 .pressed {
   background-color: chartreuse;
 }
+
+#face-buttons {
+  border: solid 1px black;
+  border-radius: 500px;
+}

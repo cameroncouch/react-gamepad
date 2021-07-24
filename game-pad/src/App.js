@@ -12,15 +12,73 @@ class Buttons extends React.Component {
   buildButtons(buttons) {
     return buttons[0].map(
       (button, idx) => {
-        return (
-          <p
-            key={idx}
-            value={button.value}
-            className={button.className}
-          >
-            {"BUTTON" + idx + button.pressed}
-          </p>
-        )
+        if(idx <= 3) {
+          return (
+            <ol id={"face-buttons"}>
+              <li
+                key={idx}
+                value={button.value}
+                id={`button-${idx}`}
+                className={button.className}
+              >
+                {"BUTTON" + idx + button.pressed}
+              </li>
+            </ol>
+          )
+        } else if (idx <= 7){
+          return (
+            <ol id={"shoulder-buttons"}>
+              <li
+                key={idx}
+                value={button.value}
+                id={`button-${idx}`}
+                className={button.className}
+              >
+                {"BUTTON" + idx + button.pressed}
+              </li>
+            </ol>
+          )
+        } else if(idx <= 9) {
+          return (
+            <ol id={"start-select"}>
+              <li
+                key={idx}
+                value={button.value}
+                id={`button-${idx}`}
+                className={button.className}
+              >
+                {"BUTTON" + idx + button.pressed}
+              </li>
+            </ol>
+          )
+        } else if(idx <= 11) {
+          return (
+            <ol id={"l3-r3"}>
+              <li
+                key={idx}
+                value={button.value}
+                id={`button-${idx}`}
+                className={button.className}
+              >
+                {"BUTTON" + idx + button.pressed}
+              </li>
+            </ol>
+          )
+        } else if (idx <= 16){
+          return (
+            <ol id={"dpad"}>
+              <li
+                key={idx}
+                value={button.value}
+                id={`button-${idx}`}
+                className={button.className}
+              >
+                {"BUTTON" + idx + button.pressed}
+              </li>
+            </ol>
+          )
+        }
+        return null;
       }
     )
   }
@@ -34,7 +92,6 @@ class Buttons extends React.Component {
         {
           gamePads ? this.buildButtons(buttons) : null
         }
-        <p>{this.props.someProp}</p>
       </div>
     )
   }
@@ -70,7 +127,7 @@ class Connected extends React.Component {
     return (
       <div className="connection">
         {
-          gamePads ?
+          gamePads[0] ?
             gamePads.map((pad) => {
               return (
                 <IndicateControllerConnection
@@ -83,7 +140,6 @@ class Connected extends React.Component {
         }
         <p>Connection Status</p>
         <p>{connectionStatus}</p>
-        <p>{this.props.someProp}</p>
       </div>
     );
   }
@@ -134,39 +190,35 @@ class Controller extends React.Component {
   handleButtonPress() {
     this.prepGamepads();
     const updatedButtons = this.state.buttons ? [...this.state.buttons] : undefined;
-    requestAnimationFrame(() => {
-      if(!updatedButtons) { return; }
-      for(let button in updatedButtons[0]) {
-          if(updatedButtons[0][button].pressed) {
-            updatedButtons[0][button].className = "pressed"
-          } else {
-            updatedButtons[0][button].className = "not-pressed"
-          }
-      }
-    })
+    if(!updatedButtons) { return; }
+    for(let button in updatedButtons[0]) {
+        if(updatedButtons[0][button].pressed) {
+          updatedButtons[0][button].className = "pressed"
+        } else {
+          updatedButtons[0][button].className = "not-pressed"
+        }
+    }
     this.setState({buttons: updatedButtons});
+    requestAnimationFrame(this.handleButtonPress);
   }
 
   componentDidMount() {
-    setInterval(() => this.handleButtonPress(), 100);
+    this.handleButtonPress();
   }
 
   render() {
     const connectedPads = this.state.connectedPads ? this.state.connectedPads : null,
           connectionStatus = this.state.connectionStatus,
           buttons = this.state.buttons ? this.state.buttons : null;
-    // console.log(buttons);
     return (
       <div className="controller">
         <p>Controller</p>
         <Connected
-          someProp={"Test prop from controller(parent)"}
           onGamepadConnection={this.handleGamepadConnection}
           connectedPads={connectedPads}
           connectionStatus={connectionStatus}
         />
         <Buttons
-          someProp={"Test prop from controller(parent)"}
           connectedPads={connectedPads}
           buttons={buttons}
         />
