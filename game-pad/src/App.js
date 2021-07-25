@@ -7,10 +7,11 @@ class Buttons extends React.Component {
     this.state = {
       //some state
     }
+    this.buildButtons = this.buildButtons.bind(this);
   }
 
   buildButtons(start, stop, buttons) {
-    return buttons[this.props.chosenController].map(
+    return buttons.map(
       (button, idx) => {
         if (idx >= start && idx <= stop) {
           return (
@@ -31,62 +32,63 @@ class Buttons extends React.Component {
 
   render() {
     const gamePads = this.props.connectedPads.length > 0 ? this.props.connectedPads : null,
-      buttons = this.props.buttons.length > 0 ? this.props.buttons : null;
+      buttons = this.props.buttons.length > 0 ? this.props.buttons : null,
+      chosenController = this.props.chosenController >= 0 ? this.props.chosenController : null;
     return (
       <div className="buttons">
         <div className="top">
           <ol className="bumpers">
             {
-              gamePads ? this.buildButtons(4, 5, buttons) : null
+              gamePads ? this.buildButtons(4, 5, buttons[chosenController]) : null
             }
           </ol>
           <ol className="triggers">
             {
-              gamePads ? this.buildButtons(6, 7, buttons) : null
+              gamePads ? this.buildButtons(6, 7, buttons[chosenController]) : null
             }
           </ol>
         </div>
         <div className="middle">
           <ol className="dpad">
             {
-              gamePads ? this.buildButtons(12, 15, buttons) : null
+              gamePads ? this.buildButtons(12, 15, buttons[chosenController]) : null
             }
           </ol>
           <ol className="select">
             {
-              gamePads ? this.buildButtons(8, 8, buttons) : null
+              gamePads ? this.buildButtons(8, 8, buttons[chosenController]) : null
             }
           </ol>
           <ol className="touchpad">
             {
-              gamePads ? this.buildButtons(17, 17, buttons) : null
+              gamePads ? this.buildButtons(17, 17, buttons[chosenController]) : null
             }
           </ol>
           <ol className="start">
             {
-              gamePads ? this.buildButtons(9, 9, buttons) : null
+              gamePads ? this.buildButtons(9, 9, buttons[chosenController]) : null
             }
           </ol>
           <ol className="face">
             {
-              gamePads ? this.buildButtons(0, 3, buttons) : null
+              gamePads ? this.buildButtons(0, 3, buttons[chosenController]) : null
             }
           </ol>
         </div>
         <div className="bottom">
           <ol className="l3">
             {
-              gamePads ? this.buildButtons(10, 10, buttons) : null
+              gamePads ? this.buildButtons(10, 10, buttons[chosenController]) : null
             }
           </ol>
           <ol className="home">
             {
-              gamePads ? this.buildButtons(16, 16, buttons) : null
+              gamePads ? this.buildButtons(16, 16, buttons[chosenController]) : null
             }
           </ol>
           <ol className="r3">
             {
-              gamePads ? this.buildButtons(11, 11, buttons) : null
+              gamePads ? this.buildButtons(11, 11, buttons[chosenController]) : null
             }
           </ol>
         </div>
@@ -126,22 +128,22 @@ class Connected extends React.Component {
   render() {
     const connectionStatus = this.props.connectionStatus,
       gamePads = this.props.connectedPads ? this.props.connectedPads : null;
-
     return (
       <div className="connection">
         {
           gamePads[0] ?
-            gamePads.map((pad) => {
-              return (
-                <IndicateControllerConnection
-                  key={pad.index}
-                  value={pad.index}
-                  gamePads={gamePads}
-                  onChosenController={this.props.onChosenController}
-                />
-              )
-            })
-            : null
+            gamePads[0].connected ?
+              gamePads.map((pad) => {
+                return (
+                  <IndicateControllerConnection
+                    key={pad.index}
+                    value={pad.index}
+                    gamePads={gamePads}
+                    onChosenController={this.props.onChosenController}
+                  />
+                )
+              })
+              : null : null
         }
         <p>Connection Status</p>
         <p>{connectionStatus}</p>
@@ -176,7 +178,7 @@ class Controller extends React.Component {
       this.setState({
         connectionStatus: "Gamepad Disconnected",
         connectedPads: navigator.getGamepads(),
-        chosenController: null
+        chosenController: 0
       });
     }
   }
