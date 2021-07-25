@@ -10,7 +10,7 @@ class Buttons extends React.Component {
   }
 
   buildButtons(start, stop, buttons) {
-    return buttons[0].map(
+    return buttons[this.props.chosenController].map(
       (button, idx) => {
         if (idx >= start && idx <= stop) {
           return (
@@ -95,11 +95,15 @@ class Buttons extends React.Component {
   }
 }
 
-function IndicateControllerConnection() {
+function IndicateControllerConnection(props) {
   return (
     <div className="connected">
-      <p>Connected:</p>
-      <span>🕹️</span>
+      <button
+        value={props.value}
+        onClick={props.onChosenController}
+      >
+        🕹️
+      </button>
     </div>
   )
 }
@@ -131,7 +135,9 @@ class Connected extends React.Component {
               return (
                 <IndicateControllerConnection
                   key={pad.index}
+                  value={pad.index}
                   gamePads={gamePads}
+                  onChosenController={this.props.onChosenController}
                 />
               )
             })
@@ -148,26 +154,37 @@ class Controller extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      chosenController: 0,
       connectionStatus: "Gamepad not detected",
       connectedPads: [],
       buttons: []
     }
     this.handleGamepadConnection = this.handleGamepadConnection.bind(this);
     this.handleButtonPress = this.handleButtonPress.bind(this);
+    this.handleChosenController = this.handleChosenController.bind(this);
   }
 
   handleGamepadConnection(e) {
     if (e.type === "gamepadconnected") {
+      console.log(e.gamepad.index)
       this.setState({
         connectionStatus: "Gamepad Connected",
+        chosenController: e.gamepad.index
       });
       this.prepGamepads();
     } else {
       this.setState({
         connectionStatus: "Gamepad Disconnected",
-        connectedPads: navigator.getGamepads()
+        connectedPads: navigator.getGamepads(),
+        chosenController: null
       });
     }
+  }
+
+  handleChosenController(e) {
+    this.setState({
+      chosenController: e.target.value
+    })
   }
 
   prepGamepads() {
@@ -190,11 +207,11 @@ class Controller extends React.Component {
     this.prepGamepads();
     const updatedButtons = this.state.buttons ? [...this.state.buttons] : undefined;
     if (!updatedButtons) { return; }
-    for (let button in updatedButtons[0]) {
-      if (updatedButtons[0][button].pressed) {
-        updatedButtons[0][button].className = "pressed"
+    for (let button in updatedButtons[this.state.chosenController]) {
+      if (updatedButtons[this.state.chosenController][button].pressed) {
+        updatedButtons[this.state.chosenController][button].className = "pressed"
       } else {
-        updatedButtons[0][button].className = updatedButtons[0][button].className ? "not-pressed" : null
+        updatedButtons[this.state.chosenController][button].className = updatedButtons[this.state.chosenController][button].className ? "not-pressed" : null
       }
     }
     this.setState({ buttons: updatedButtons });
@@ -208,18 +225,21 @@ class Controller extends React.Component {
   render() {
     const connectedPads = this.state.connectedPads ? this.state.connectedPads : null,
       connectionStatus = this.state.connectionStatus,
-      buttons = this.state.buttons ? this.state.buttons : null;
+      buttons = this.state.buttons ? this.state.buttons : null,
+      chosenController = this.state.chosenController;
     return (
       <div className="controller">
         <p>Controller</p>
         <Connected
           onGamepadConnection={this.handleGamepadConnection}
+          onChosenController={this.handleChosenController}
           connectedPads={connectedPads}
           connectionStatus={connectionStatus}
         />
         <Buttons
           connectedPads={connectedPads}
           buttons={buttons}
+          chosenController={chosenController}
         />
       </div>
     );
