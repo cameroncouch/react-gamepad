@@ -1,15 +1,2 @@
-Controller
-- Buttons pressed as a part of state - check every X time, pass to Buttons comp - Don't mutate state
-- Switch to other connected controller
--
-
-Connected
-- Style
--
--
-
-Buttons
-- Set style and text to indicate pressed 
-  - Don't mutate state to do so. Update the timing
--
--
+make as PWA
+style it
