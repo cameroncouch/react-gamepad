@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './app/App';
 import reportWebVitals from './reportWebVitals';
+import LocalServiceWorkerRegister from './register.js';
+
+LocalServiceWorkerRegister();
 
 ReactDOM.render(
   <React.StrictMode>

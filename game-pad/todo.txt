@@ -1,2 +1,5 @@
 make as PWA
+ - Service Worker ADDED
+ - Install workbox and configure app to work with service worker
+refactor
 style it

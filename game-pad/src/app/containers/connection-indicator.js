@@ -1,3 +1,5 @@
+import React from "react"
+
 export default function IndicateControllerConnection(props) {
   return (
     <div className="connected">

@@ -1,8 +1,10 @@
+import React from 'react'
 import { Component } from 'react'
 import { Connected } from './connection/connection.component';
 import { Buttons } from './buttons/buttons.component';
 
 export class Gamepad extends Component {
+    _isMounted = false;
     constructor(props) {
         super(props);
         this.state = {
@@ -17,26 +19,30 @@ export class Gamepad extends Component {
     }
 
     handleGamepadConnection(e) {
-        if (e.type === "gamepadconnected") {
-            this.setState({
-                connectionStatus: "Gamepad Connected",
-                chosenController: e.gamepad.index
-            });
-            this.prepGamepads();
-        } else {
-            this.setState({
-                connectionStatus: "Gamepad Disconnected",
-                chosenController: this.state.connectedPads.findIndex(pad => !!pad)
-            });
-            this.prepGamepads();
-            console.log(this.state.chosenController);
+        if(this._isMounted) {
+            if (e.type === "gamepadconnected") {
+                this.setState({
+                    connectionStatus: "Gamepad Connected",
+                    chosenController: e.gamepad.index
+                });
+                this.prepGamepads();
+            } else {
+                this.setState({
+                    connectionStatus: "Gamepad Disconnected",
+                    chosenController: this.state.connectedPads.findIndex(pad => !!pad)
+                });
+                this.prepGamepads();
+                console.log(this.state.chosenController);
+            }
         }
     }
 
     handleChosenController(e) {
-        this.setState({
-            chosenController: e.target.value
-        })
+        if(this._isMounted) {
+            this.setState({
+                chosenController: e.target.value
+            })
+        }
     }
 
     prepGamepads() {
@@ -49,10 +55,12 @@ export class Gamepad extends Component {
                 arr2.push(pads[pad]["buttons"])
             }
         }
-        this.setState({
-            connectedPads: arr1,
-            buttons: arr2
-        })
+        if(this._isMounted) {
+            this.setState({
+                connectedPads: arr1,
+                buttons: arr2
+            })
+        }
     }
 
     handleButtonPress() {
@@ -66,14 +74,18 @@ export class Gamepad extends Component {
                 updatedButtons[this.state.chosenController][button].className = updatedButtons[this.state.chosenController][button].className ? "not-pressed" : null
             }
         }
-        this.setState({ buttons: updatedButtons });
+        if(this._isMounted) { this.setState({ buttons: updatedButtons }); }
         requestAnimationFrame(this.handleButtonPress);
     }
 
     componentDidMount() {
-        this.handleButtonPress();
+        this._isMounted = true;
+        if(this._isMounted) { this.handleButtonPress(); }
     }
 
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
     render() {
         const connectedPads = this.state.connectedPads ? this.state.connectedPads : null,
             connectionStatus = this.state.connectionStatus,

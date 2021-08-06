@@ -1,3 +1,5 @@
+import React from "react"
+
 export default function buildButtons(start, stop, buttons) {
   return buttons ? buttons.map(
     (button, idx) => {
