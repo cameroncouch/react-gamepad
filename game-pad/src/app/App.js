@@ -1,10 +1,10 @@
 import React from "react";
-import './App.css'
+import styles from './app-styles.css'
 import { Gamepad } from "./components/gamepad/gamepad.component"
 
 function App() {
   return (
-    <div className="App">
+    <div className={styles.App}>
         <Gamepad />
     </div>
   );

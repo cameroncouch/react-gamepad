@@ -57,13 +57,11 @@ module.exports = {
         new webpack.ProvidePlugin({
             process: 'process/browser'
         }),
-        // new webpack.DefinePlugin({
-        //     'process.env.NODE_ENV': JSON.stringify('development')
-        // }),
         new HtmlWebpackPlugin({
             template: __dirname + '/public/index.html',
             filename: 'index.html',
             inject: 'body'
+            
         })
     ]
 };

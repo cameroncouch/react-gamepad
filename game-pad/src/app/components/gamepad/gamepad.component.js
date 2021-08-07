@@ -2,6 +2,7 @@ import React from 'react'
 import { Component } from 'react'
 import { Connected } from './connection/connection.component';
 import { Buttons } from './buttons/buttons.component';
+import styles from './gamepad-styles.css';
 
 export class Gamepad extends Component {
     _isMounted = false;
@@ -32,7 +33,6 @@ export class Gamepad extends Component {
                     chosenController: this.state.connectedPads.findIndex(pad => !!pad)
                 });
                 this.prepGamepads();
-                console.log(this.state.chosenController);
             }
         }
     }
@@ -69,9 +69,9 @@ export class Gamepad extends Component {
         if (!updatedButtons) { return; }
         for (let button in updatedButtons[this.state.chosenController]) {
             if (updatedButtons[this.state.chosenController][button].pressed) {
-                updatedButtons[this.state.chosenController][button].className = "pressed"
+                updatedButtons[this.state.chosenController][button].className = styles.pressed
             } else {
-                updatedButtons[this.state.chosenController][button].className = updatedButtons[this.state.chosenController][button].className ? "not-pressed" : null
+                updatedButtons[this.state.chosenController][button].className = updatedButtons[this.state.chosenController][button].className ? styles["not-pressed"] : null
             }
         }
         if(this._isMounted) { this.setState({ buttons: updatedButtons }); }
@@ -92,7 +92,7 @@ export class Gamepad extends Component {
             buttons = this.state.buttons ? this.state.buttons : null,
             chosenController = this.state.chosenController;
         return (
-            <div className="controller">
+            <div className={styles.controller}>
                 <Connected
                     onGamepadConnection={this.handleGamepadConnection}
                     handleChosenController={this.handleChosenController}

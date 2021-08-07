@@ -1,6 +1,7 @@
 import React from 'react'
 import { Component } from 'react'
 import IndicateControllerConnection from '../../../containers/connection-indicator';
+import styles from './connection-styles.css';
 
 export class Connected extends Component {
 
@@ -17,7 +18,7 @@ export class Connected extends Component {
     const connectionStatus = this.props.connectionStatus,
       gamePads = this.props.connectedPads ? this.props.connectedPads : null;
     return (
-      <div className="connection">
+      <div className={styles.connection}>
         {
           gamePads[0] ?
             gamePads[0].connected ?

@@ -1,0 +1,18 @@
+.buttons {
+display: flex;
+flex-direction: column;
+}
+
+.buttons ol {
+  border: 1px solid black;
+}
+
+.top {
+display: flex;
+flex-flow: column-reverse;
+}
+
+.middle, .bottom, .bumpers, .triggers {
+display: flex;
+justify-content: space-around;
+}
