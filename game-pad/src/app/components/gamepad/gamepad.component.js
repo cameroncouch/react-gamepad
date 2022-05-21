@@ -6,10 +6,12 @@ import styles from './gamepad-styles.css';
 
 export class Gamepad extends Component {
     _isMounted = false;
+    _currentAnimationFrame;
+
     constructor(props) {
         super(props);
         this.state = {
-            chosenController: 0,
+            chosenController: '0',
             connectionStatus: "Gamepad not detected. Press any button on your gamepad, or connect a gamepad!",
             connectedPads: [],
             buttons: []
@@ -30,8 +32,10 @@ export class Gamepad extends Component {
             } else {
                 this.setState({
                     connectionStatus: "Gamepad Disconnected",
+                    connectedPads: this.state.connectedPads.splice(e.gamepad.index, 1),
                     chosenController: this.state.connectedPads.findIndex(pad => !!pad)
                 });
+                console.log(this.state.chosenController);
                 this.prepGamepads();
             }
         }
@@ -64,6 +68,9 @@ export class Gamepad extends Component {
     }
 
     handleButtonPress() {
+        if (this.state.connectionStatus === "Gamepad Disconnected") {
+            cancelAnimationFrame(this._currentAnimationFrame);
+        }
         this.prepGamepads();
         const updatedButtons = this.state.buttons ? [...this.state.buttons] : undefined;
         if (!updatedButtons) { return; }
@@ -75,7 +82,7 @@ export class Gamepad extends Component {
             }
         }
         if(this._isMounted) { this.setState({ buttons: updatedButtons }); }
-        requestAnimationFrame(this.handleButtonPress);
+        this._currentAnimationFrame = requestAnimationFrame(this.handleButtonPress);
     }
 
     componentDidMount() {

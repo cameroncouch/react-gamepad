@@ -20,8 +20,7 @@ export class Connected extends Component {
     return (
       <div className={styles.connection}>
         {
-          gamePads[0] ?
-            gamePads[0].connected ?
+           gamePads.filter(pad => pad.connected) ?
               gamePads.map((pad) => {
                 return (
                   <IndicateControllerConnection
@@ -32,11 +31,11 @@ export class Connected extends Component {
                   />
                 )
               })
-              : null : null
+              : null
         }
         <p>Connection Status</p>
         <p>{connectionStatus}</p>
-        {this.props.chosenController ? <p>Testing gamepad #{this.props.chosenController}</p> : ''}
+        {connectionStatus === "Gamepad Connected" ? <p>Testing gamepad #{this.props.chosenController}</p> : ''}
       </div>
     );
   }
