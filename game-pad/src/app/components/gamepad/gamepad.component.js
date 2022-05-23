@@ -22,30 +22,41 @@ export class Gamepad extends Component {
     }
 
     handleGamepadConnection(e) {
-        if(this._isMounted) {
+        if (this._isMounted) {
             if (e.type === "gamepadconnected") {
                 this.setState({
                     connectionStatus: "Gamepad Connected",
                     chosenController: e.gamepad.index
                 });
                 this.prepGamepads();
-            } else {
+            }
+            else if (e.type === "gamepaddisconnected" && this.state.connectedPads.length === 0) {
                 this.setState({
                     connectionStatus: "Gamepad Disconnected",
-                    connectedPads: this.state.connectedPads.splice(e.gamepad.index, 1),
+                    chosenController: !1
+                });
+            }
+            else {
+                this.setState({
+                    connectionStatus: "Gamepad Connected",
                     chosenController: this.state.connectedPads.findIndex(pad => !!pad)
                 });
-                console.log(this.state.chosenController);
                 this.prepGamepads();
             }
         }
     }
 
     handleChosenController(e) {
-        if(this._isMounted) {
-            this.setState({
-                chosenController: e.target.value
-            })
+        if (this._isMounted) {
+            if (this.state.connectedPads.length === 1) {
+                this.setState({
+                    chosenController: '0'
+                })
+            } else {
+                this.setState({
+                    chosenController: e.target.value
+                })
+            }
         }
     }
 
@@ -59,7 +70,7 @@ export class Gamepad extends Component {
                 arr2.push(pads[pad]["buttons"])
             }
         }
-        if(this._isMounted) {
+        if (this._isMounted) {
             this.setState({
                 connectedPads: arr1,
                 buttons: arr2
@@ -81,13 +92,13 @@ export class Gamepad extends Component {
                 updatedButtons[this.state.chosenController][button].className = updatedButtons[this.state.chosenController][button].className ? styles["not-pressed"] : null
             }
         }
-        if(this._isMounted) { this.setState({ buttons: updatedButtons }); }
+        if (this._isMounted) { this.setState({ buttons: updatedButtons }); }
         this._currentAnimationFrame = requestAnimationFrame(this.handleButtonPress);
     }
 
     componentDidMount() {
         this._isMounted = true;
-        if(this._isMounted) { this.handleButtonPress(); }
+        if (this._isMounted) { this.handleButtonPress(); }
     }
 
     componentWillUnmount() {

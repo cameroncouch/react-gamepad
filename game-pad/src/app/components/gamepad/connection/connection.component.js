@@ -19,23 +19,32 @@ export class Connected extends Component {
       gamePads = this.props.connectedPads ? this.props.connectedPads : null;
     return (
       <div className={styles.connection}>
-        {
-           gamePads.filter(pad => pad.connected) ?
-              gamePads.map((pad) => {
-                return (
-                  <IndicateControllerConnection
-                    key={pad.index}
-                    value={pad.index}
-                    gamePads={gamePads}
-                    onChosenController={this.props.handleChosenController}
-                  />
-                )
-              })
-              : null
+        <div>
+          <h1>Connection Status:</h1>
+          {connectionStatus === "Gamepad Connected"
+            ?
+            <div>
+              <p>{gamePads.length} controllers connected</p>
+              <p>
+                {this.props.chosenController ? `Testing controller #${this.props.chosenController}` : ''}
+              </p>
+            </div>
+            : "No gamepads detected! Connect a controller or press a button on a currently connected controller."
+          }
+        </div>
+        {gamePads.filter(pad => pad.connected) ?
+          gamePads.map((pad, idx) => {
+            return (
+              <IndicateControllerConnection
+                key={pad.index}
+                value={idx}
+                connected={pad.connected}
+                onChosenController={this.props.handleChosenController}
+              />
+            )
+          })
+          : null
         }
-        <p>Connection Status</p>
-        <p>{connectionStatus}</p>
-        {connectionStatus === "Gamepad Connected" ? <p>Testing gamepad #{this.props.chosenController}</p> : ''}
       </div>
     );
   }
