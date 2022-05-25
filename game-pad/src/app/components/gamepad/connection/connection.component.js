@@ -36,7 +36,7 @@ export class Connected extends Component {
           gamePads.map((pad, idx) => {
             return (
               <IndicateControllerConnection
-                key={pad.index}
+                key={idx}
                 value={idx}
                 connected={pad.connected}
                 onChosenController={this.props.handleChosenController}

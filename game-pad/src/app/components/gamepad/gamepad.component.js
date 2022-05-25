@@ -26,14 +26,13 @@ export class Gamepad extends Component {
             if (e.type === "gamepadconnected") {
                 this.setState({
                     connectionStatus: "Gamepad Connected",
-                    chosenController: e.gamepad.index
                 });
                 this.prepGamepads();
             }
             else if (e.type === "gamepaddisconnected" && this.state.connectedPads.length === 0) {
                 this.setState({
                     connectionStatus: "Gamepad Disconnected",
-                    chosenController: !1
+                    chosenController: null
                 });
             }
             else {
@@ -62,14 +61,9 @@ export class Gamepad extends Component {
 
     prepGamepads() {
         const pads = navigator.getGamepads(),
-            arr1 = [],
-            arr2 = [];
-        for (let pad in pads) {
-            if (pads[pad] && typeof pads[pad] === 'object') {
-                arr1.push(pads[pad]);
-                arr2.push(pads[pad]["buttons"])
-            }
-        }
+            arr1 = !!pads && pads.filter(pad => !!pad),
+            arr2 = !!arr1 && arr1.map(pad => !!pad && !!pad.buttons && pad.buttons);
+
         if (this._isMounted) {
             this.setState({
                 connectedPads: arr1,

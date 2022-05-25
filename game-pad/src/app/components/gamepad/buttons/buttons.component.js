@@ -1,6 +1,6 @@
 import React from "react"
 import { Component } from "react";
-import buildButtons from "../../../containers/button";
+import buildButtons from "../../../containers/button-builder";
 import styles from "./button-styles.css";
 
 export class Buttons extends Component {
