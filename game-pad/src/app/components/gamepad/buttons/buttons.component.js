@@ -22,48 +22,54 @@ export class Buttons extends Component {
           </ol>
         </div>
         <div className={styles.middle}>
-          <ol className={styles.dpad}>
-            {
-              buttons ? buildButtons(12, 15, buttons[chosenController]) : null
-            }
-          </ol>
+          <div>
+            <ol className={styles.crosshair}>
+              {
+                buttons ? buildButtons(12, 15, buttons[chosenController]) : null
+              }
+            </ol>
+          </div>
           <ol className={styles.select}>
             {
-              buttons ? buildButtons(8, 8, buttons[chosenController]) : null
+              buttons ? buildButtons(8, 8, buttons[chosenController], true) : null
             }
           </ol>
-          <ol className={styles.touchpad}>
-            {
-              buttons ? buildButtons(17, 17, buttons[chosenController]) : null
-            }
-          </ol>
+          <div>
+            <ol className={styles.touchpad}>
+              {
+                buttons ? buildButtons(17, 17, buttons[chosenController], true) : null
+              }
+            </ol>
+            <ol className={styles.home}>
+              {
+                buttons ? buildButtons(16, 16, buttons[chosenController], true) : null
+              }
+            </ol>
+          </div>
           <ol className={styles.start}>
             {
-              buttons ? buildButtons(9, 9, buttons[chosenController]) : null
+              buttons ? buildButtons(9, 9, buttons[chosenController], true) : null
             }
           </ol>
-          <ol className={styles.face}>
-            {
-              buttons ? buildButtons(0, 3, buttons[chosenController]) : null
-            }
-          </ol>
+          <div>
+            <ol className={styles.crosshair}>
+              {
+                buttons ? buildButtons(0, 3, buttons[chosenController]) : null
+              }
+            </ol>
+          </div>
         </div>
         <div className={styles.bottom}>
-          <ol className={styles.l3}>
+          <div className={styles.l3}>
             {
-              buttons ? buildButtons(10, 10, buttons[chosenController]) : null
+              buttons ? buildButtons(10, 10, buttons[chosenController], true) : null
             }
-          </ol>
-          <ol className={styles.home}>
+          </div>
+          <div className={styles.r3}>
             {
-              buttons ? buildButtons(16, 16, buttons[chosenController]) : null
+              buttons ? buildButtons(11, 11, buttons[chosenController], true) : null
             }
-          </ol>
-          <ol className={styles.r3}>
-            {
-              buttons ? buildButtons(11, 11, buttons[chosenController]) : null
-            }
-          </ol>
+          </div>
         </div>
       </div>
     )

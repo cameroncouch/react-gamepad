@@ -1,18 +1,80 @@
 .buttons {
-display: flex;
-flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .buttons ol {
-  border: 1px solid black;
+  padding: 0px;
+  text-align: center;
+}
+
+li::marker {
+  content: '';
+}
+
+li {
+  border: 2px solid black;
+  padding: 10px;
 }
 
 .top {
-display: flex;
-flex-flow: column-reverse;
+  display: flex;
+  flex-flow: column-reverse;
 }
 
-.middle, .bottom, .bumpers, .triggers {
-display: flex;
-justify-content: space-around;
+.middle,
+.bottom,
+.bumpers,
+.triggers {
+  display: flex;
+  justify-content: space-around;
+}
+
+.start,
+.select {
+  align-content: center;
+}
+
+[data-name=start],
+[data-name=select] {
+  border-radius: 10px;
+  padding: 0px 10px;
+  width: 20px;
+}
+
+.crosshair {
+  display: grid;
+  grid-template-columns: 35px 35px 35px;
+}
+
+.crosshair li, [data-name="left-stick-btn"], [data-name="right-stick-btn"], [data-name="home-btn"] {
+  border-radius: 100%;
+  width: 20px;
+  height: 20px;
+}
+
+[data-name=face-south],
+[data-name=pad-down] {
+  grid-column: 2;
+  grid-row: 3;
+  border-radius: 100%;
+  width: 20px;
+}
+
+[data-name=face-right],
+[data-name=pad-right] {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+[data-name=face-left],
+[data-name=pad-left] {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+[data-name=face-north],
+[data-name=pad-up] {
+  grid-column: 2;
+  grid-row: 1;
 }

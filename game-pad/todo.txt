@@ -1,5 +1,18 @@
+- Add axis' from controllers and necessary styling
+Axes properly pulled and are updating
+- Add to state
+- Make axes builder
+- Clean up component  
+
+
+Should have a circle container with and X/Y coordinate cross
+Should have a dot that moves within the circle container in tandem with the 4 floats
+
+
+
 make as PWA
  - Service Worker ADDED
  - Install workbox and configure app to work with service worker
+ - Need to read up on service workers to understand
 refactor
 style it

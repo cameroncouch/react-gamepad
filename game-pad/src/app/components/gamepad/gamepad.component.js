@@ -2,6 +2,7 @@ import React from 'react'
 import { Component } from 'react'
 import { Connected } from './connection/connection.component';
 import { Buttons } from './buttons/buttons.component';
+import { Sticks } from './sticks/sticks.component';
 import styles from './gamepad-styles.css';
 
 export class Gamepad extends Component {
@@ -63,7 +64,6 @@ export class Gamepad extends Component {
         const pads = navigator.getGamepads(),
             arr1 = !!pads && pads.filter(pad => !!pad),
             arr2 = !!arr1 && arr1.map(pad => !!pad && !!pad.buttons && pad.buttons);
-
         if (this._isMounted) {
             this.setState({
                 connectedPads: arr1,
@@ -75,6 +75,8 @@ export class Gamepad extends Component {
     handleButtonPress() {
         if (this.state.connectionStatus === "Gamepad Disconnected") {
             cancelAnimationFrame(this._currentAnimationFrame);
+            this._currentAnimationFrame = requestAnimationFrame(this.handleButtonPress);
+            return;
         }
         this.prepGamepads();
         const updatedButtons = this.state.buttons ? [...this.state.buttons] : undefined;
@@ -116,6 +118,9 @@ export class Gamepad extends Component {
                     connectedPads={connectedPads}
                     buttons={buttons}
                     chosenController={chosenController}
+                />
+                <Sticks 
+                    sticks={connectedPads && chosenController && connectedPads[chosenController] ? connectedPads[chosenController].axes : ''}
                 />
             </div>
         );
