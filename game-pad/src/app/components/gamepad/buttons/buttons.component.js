@@ -60,16 +60,16 @@ export class Buttons extends Component {
           </div>
         </div>
         <div className={styles.bottom}>
-          <div className={styles.l3}>
+          <ul className={styles.l3}>
             {
               buttons ? buildButtons(10, 10, buttons[chosenController], true) : null
             }
-          </div>
-          <div className={styles.r3}>
+          </ul>
+          <ul className={styles.r3}>
             {
               buttons ? buildButtons(11, 11, buttons[chosenController], true) : null
             }
-          </div>
+          </ul>
         </div>
       </div>
     )
