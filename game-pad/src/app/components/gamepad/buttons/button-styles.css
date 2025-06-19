@@ -14,10 +14,6 @@ ul,ol {
   text-align: center;
 }
 
-li::marker {
-  content: '';
-}
-
 li {
   border: 2px solid black;
   padding: 10px;
@@ -46,6 +42,7 @@ li {
   border-radius: 10px;
   padding: 0px 10px;
   width: 20px;
+  height: 10px;
 }
 
 .crosshair {
